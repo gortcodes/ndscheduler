@@ -117,7 +117,7 @@ class BaseScheduler (apscheduler_tornado.TornadoScheduler):
 
     def add_scheduler_job(self, job_class_string, name, pub_args=None,
                           month=None, day_of_week=None, day=None,
-                          hour=None, minute=None, **kwargs):
+                          hour=None, minute=None, timezone=None, **kwargs):
         """Add a job. Job information will be persistent in postgres.
         This is a NON-BLOCKING operation, as internally, apscheduler calls wakeup()
         that is async.
@@ -143,10 +143,10 @@ class BaseScheduler (apscheduler_tornado.TornadoScheduler):
         arguments = [job_class_string, job_id, self.datastore_class_path,
                      datastore.db_config, datastore.table_names]
         arguments.extend(pub_args)
-
         self.add_job(self.run_job,
-                     'cron', month=month, day=day, day_of_week=day_of_week, hour=hour,
-                     minute=minute, args=arguments, kwargs=kwargs, name=name, id=job_id)
+                     'cron', month=month, day=day, day_of_week=day_of_week,
+                     hour=hour, minute=minute, args=arguments, kwargs=kwargs,
+                     name=name, id=job_id, timezone=timezone)
         return job_id
 
     def modify_scheduler_job(self, job_id, **kwargs):
@@ -181,7 +181,7 @@ class BaseScheduler (apscheduler_tornado.TornadoScheduler):
                 del kwargs['pub_args']
             kwargs['args'] = args
 
-        cron_keywords = ['month', 'day', 'hour', 'minute', 'day_of_week']
+        cron_keywords = ['month', 'day', 'hour', 'minute', 'day_of_week', 'timezone']
         trigger_kwargs = {}
         for cron_key in cron_keywords:
             if cron_key in kwargs:

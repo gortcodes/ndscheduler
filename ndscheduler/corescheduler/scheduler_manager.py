@@ -80,7 +80,7 @@ class SchedulerManager:
     # Manage jobs
     #
     def add_job(self, job_class_string, name, pub_args=None, month=None,
-                day_of_week=None, day=None, hour=None, minute=None, **kwargs):
+                day_of_week=None, day=None, hour=None, minute=None, timezone=None, **kwargs):
         """Add a job. Job infomation will be persistent in the datastore.
         This is a NON-BLOCKING operation, as internally, apscheduler calls wakeup()
         that is async.
@@ -97,7 +97,7 @@ class SchedulerManager:
         :rtype: str
         """
         return self.sched.add_scheduler_job(job_class_string, name, pub_args, month, day_of_week,
-                                            day, hour, minute, **kwargs)
+                                            day, hour, minute, timezone, **kwargs)
 
     def pause_job(self, job_id):
         """Pauses the schedule of a job.

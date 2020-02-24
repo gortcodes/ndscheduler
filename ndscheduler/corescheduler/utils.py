@@ -76,6 +76,15 @@ def get_cron_strings(job):
         'minute': str(job.trigger.fields[6])}
 
 
+def get_timezone(job):
+    """Returns timezone.
+    :param Job job: An apscheduler.job.Job instance.
+    :return: timezone
+    :rtype: str
+    """
+    return job.trigger.timezone.zone
+
+
 def generate_uuid():
     """Generates 32-digit hex uuid.
     Example: d8f376e858a411e4b6ae22001ac68d05

@@ -59,13 +59,21 @@ define(['utils',
           job: job
         })
       });
-      $('#input-job-task-class').select2({
+      $('#select-job-task-class').select2({
         placeholder: "Select an job class, please",
-        data: data
-      }).on("select2-selecting", function(e) {
+        data: data,
+        width: "100%",
+        dropdownParent: $("#add-job-modal"),
+        theme: "bootstrap"
+      }).on("select2:select", function(e) {
         $('#add-job-class-notes').html(
-            _.template(JobClassNotesHtml)({job: e.choice.job})
+            _.template(JobClassNotesHtml)({job: e.params.data.job})
         );
+      });
+      $('#select-job-timezone').select2({
+        width: "100%",
+        dropdownParent: $("#add-job-modal"),
+        theme: "bootstrap"
       });
 
     },
@@ -76,12 +84,13 @@ define(['utils',
         e.preventDefault();
 
         var jobName = $('#input-job-name').val();
-        var jobTask = $('#input-job-task-class').val();
+        var jobTask = $('#select-job-task-class').val();
         var month = $('#input-job-month').val();
         var dayOfWeek = $('#input-job-day-of-week').val();
         var day = $('#input-job-day').val();
         var hour = $('#input-job-hour').val();
         var minute = $('#input-job-minute').val();
+        var timezone = $('#select-job-timezone').val();
         var args = $('#input-job-task-args').val();
 
         if (!$.trim(jobName)) {
@@ -121,7 +130,8 @@ define(['utils',
           day_of_week: dayOfWeek,
           day: day,
           hour: hour,
-          minute: minute
+          minute: minute,
+          timezone: timezone
         });
 
         $('#add-job-modal').modal('hide');

@@ -56,12 +56,20 @@ define(['utils',
           job: job
         })
       });
-      $('#edit-input-job-task-class').select2({
-        data: data
-      }).on("select2-selecting", function(e) {
+      $('#edit-select-job-task-class').select2({
+        data: data,
+        width: "100%",
+        dropdownParent: $("#edit-job-modal"),
+        theme: "bootstrap"
+      }).on("select2:select", function(e) {
         $('#edit-job-class-notes').html(
-            _.template(JobClassNotesHtml)({job: e.choice.job})
+            _.template(JobClassNotesHtml)({job: e.params.data.job})
         );
+      });
+      $('#edit-select-job-timezone').select2({
+        width: "100%",
+        dropdownParent: $("#edit-job-modal"),
+        theme: "bootstrap"
       });
 
       this.bindEditJobConfirmClickEvent();
@@ -94,13 +102,14 @@ define(['utils',
         var jobActive = $button.data('job-active');
 
         $('#edit-input-job-name').val($button.data('job-name'));
-        $('#edit-input-job-task-class').val($button.data('job-task')).trigger('change');
+        $('#edit-select-job-task-class').val($button.data('job-task')).trigger('change');
         $('#edit-input-job-task-args').val($button.attr('data-job-pubargs'));
         $('#edit-input-job-month').val($button.data('job-month'));
         $('#edit-input-job-day-of-week').val($button.data('job-day-of-week'));
         $('#edit-input-job-day').val($button.data('job-day'));
         $('#edit-input-job-hour').val($button.data('job-hour'));
         $('#edit-input-job-minute').val($button.data('job-minute'));
+        $('#edit-select-job-timezone').val($button.data('job-timezone')).trigger('change');
         $('#edit-input-job-id').val(jobId);
 
         var $checkbox = $('<input>', {
@@ -144,6 +153,8 @@ define(['utils',
         var day = $('#edit-input-job-day').val();
         var hour = $('#edit-input-job-hour').val();
         var minute = $('#edit-input-job-minute').val();
+        var timezone = $('#edit-select-job-timezone').val();
+
         var args = $('#edit-input-job-task-args').val();
 
         if (jobName.trim() === '') {
@@ -184,7 +195,8 @@ define(['utils',
           day_of_week: dayOfWeek,
           day: day,
           hour: hour,
-          minute: minute
+          minute: minute,
+          timezone: timezone
         });
 
         $('#edit-job-modal').modal('hide');

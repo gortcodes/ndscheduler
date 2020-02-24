@@ -129,7 +129,8 @@ define(['utils',
             'job_hour': _.escape(jobObj.hour),
             'job_minute': _.escape(jobObj.minute),
             'job_active': job.getActiveString(),
-            'job_pubargs': _.escape(job.getPubArgsString())
+            'job_pubargs': _.escape(job.getPubArgsString()),
+            'job_timezone': _.escape(jobObj.timezone)
           }),
           job.getScheduleString(),
           job.getNextRunTimeHTMLString(),

@@ -32,10 +32,11 @@ class SchedulerManagerTest(tornado.testing.AsyncTestCase):
         day = '*/2'
         hour = '*/3'
         minute = '*/4'
+        timezone = 'US/Pacific'
 
         # non-blocking operation
         job_id = self.scheduler.add_job(task_name, name, pub_args, month, day_of_week, day,
-                                        hour, minute, languages='en-us')
+                                        hour, minute, timezone, languages='en-us')
 
         self.assertTrue(len(job_id), 32)
 
@@ -44,6 +45,7 @@ class SchedulerManagerTest(tornado.testing.AsyncTestCase):
         self.assertEqual(self.scheduler.get_job_task_class(job), task_name)
         self.assertEqual(job.id, job_id)
         self.assertEqual(job.name, name)
+        self.assertEqual(utils.get_timezone(job), timezone)
         self.assertEqual(utils.get_job_args(job), pub_args)
         self.assertEqual(utils.get_job_kwargs(job), {'languages': 'en-us'})
 
@@ -74,10 +76,11 @@ class SchedulerManagerTest(tornado.testing.AsyncTestCase):
         day = '*/2'
         hour = '*/3'
         minute = '*/4'
+        timezone = 'UTC'
 
         # non-blocking operation
         job_id = self.scheduler.add_job(job_class_string, name, pub_args, month, day_of_week,
-                                        day, hour, minute)
+                                        day, hour, minute, timezone)
 
         self.assertTrue(len(job_id), 32)
 
@@ -85,10 +88,11 @@ class SchedulerManagerTest(tornado.testing.AsyncTestCase):
         args = ['5', '6', '7']
         name = 'hello world 3'
         month = '*/6'
+        timezone = "US/Central"
 
         # non-blocking operation
         self.scheduler.modify_job(job_id, name=name, job_class_string=job_class_string,
-                                  pub_args=args, month=month)
+                                  pub_args=args, month=month, timezone=timezone)
 
         # blocking operation
         job = self.scheduler.get_job(job_id)
@@ -100,3 +104,4 @@ class SchedulerManagerTest(tornado.testing.AsyncTestCase):
         arguments += args
         self.assertEqual(list(job.args), arguments)
         self.assertEqual(str(job.trigger.fields[1]), month)
+        self.assertEqual(utils.get_timezone(job), timezone)

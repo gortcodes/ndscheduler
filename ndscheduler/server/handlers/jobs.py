@@ -40,7 +40,8 @@ class Handler(base.BaseHandler):
             'name': job.name,
             'next_run_time': next_run_time,
             'job_class_string': utils.get_job_name(job),
-            'pub_args': utils.get_job_args(job)}
+            'pub_args': utils.get_job_args(job),
+            'timezone': utils.get_timezone(job)}
 
         return_dict.update(utils.get_cron_strings(job))
         return return_dict
@@ -129,6 +130,7 @@ class Handler(base.BaseHandler):
 
         # This is non-blocking function.
         # It returns job_id immediately.
+        print(self.json_args)
         job_id = self.scheduler_manager.add_job(**self.json_args)
 
         # Blocking operation.
